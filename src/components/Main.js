@@ -1,51 +1,60 @@
 import React from 'react';
+import { apiMe, apiCards } from '../utils/Api';
+import Card from './Card';
 
-function Main() {
-    function handleEditAvatarClick() {
-        const changeAvatar = document.querySelector('.popup_change-avatar');
-        changeAvatar.classList.add('popup_opened');
-    }
-    function handleEditProfileClick() {
-        const editProfile = document.querySelector('.popup_edit-profile');
-        editProfile.classList.add('popup_opened');
-     }
-    function handleAddPlaceClick() { 
-        const addCards = document.querySelector('.popup_add-cards');
-        addCards.classList.add('popup_opened');
-    }
+function Main(props) {
+    const [userAvatar, setUserAvatar] = React.useState();
+    const [userName, setUserName] = React.useState();
+    const [userDescription, setUserDescription] = React.useState();
+    const [cards, setCards] = React.useState([]);
+
+    React.useEffect(() => {
+        apiMe.getData()
+            .then(data => {
+                console.log(data);
+                setUserAvatar(data.avatar);
+                setUserName(data.name);
+                setUserDescription(data.about);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    }, []);
+
+    React.useEffect(() => {
+        apiCards.getData()
+            .then(data => {
+                console.log(data);
+                setCards(data);
+
+
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    }, []);
 
     return (
         <main className="content">
             <section className="profile" id="">
-                <div className="profile__avatar_container">
-                    <img src="./images/profile-images/watch.gif" alt="Аватар пользователя" className="profile__avatar" />
-                    <div className="profile__avatar_change" onClick={handleEditAvatarClick}></div>
+                <div className="profile__avatar_container" style={{ backgroundImage: `url(${userAvatar})` }}>
+                    <div className="profile__avatar_change" onClick={props.onEditAvatar}></div>
                 </div>
                 <div className="profile__info">
                     <div className="profile__title">
-                        <h1 className="profile__name"></h1>
-                        <button type="button" className="profile__button-edit" onClick={handleEditProfileClick}></button>
+                        <h1 className="profile__name">{userName}</h1>
+                        <button type="button" className="profile__button-edit" onClick={props.onEditProfile}></button>
                     </div>
-                    <p className="profile__subtitle"></p>
+                    <p className="profile__subtitle">{userDescription}</p>
                 </div>
-                <button type="button" className="profile__button-add" onClick={handleAddPlaceClick}></button>
+                <button type="button" className="profile__button-add" onClick={props.onAddPlace}></button>
             </section>
 
             <section className="elements">
-                <img src="./images/image-load.gif" alt="Загрузка" className="elements__image-load" />
-                <template id="card">
-                    <div className="element">
-                        <button className="element__trash" type="button"></button>
-                        <img src="#" alt="#" className="element__image" />
-                        <div className="element__title">
-                            <h2 className="element__paragraph"></h2>
-                            <div className="like">
-                                <button className="like__heart" type="button"></button>
-                                <p className="like__count">0</p>
-                            </div>
-                        </div>
-                    </div>
-                </template>
+                {/* <img src="./images/image-load.gif" alt="Загрузка" className="elements__image-load" /> */}
+                {cards.map((card) => (
+                    <Card link={card.link} name={card.name} likes={card.likes.length} />
+                    ))}
             </section>
 
         </main>
