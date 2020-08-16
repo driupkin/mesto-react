@@ -1,7 +1,8 @@
 @import url('./__copyright/footer__copyright.css');
 .footer {
     max-width: 882px;
-    margin: 66px auto 60px;
+    padding: 66px 0 60px;
+    margin: auto;
     font-size: 19px;
     line-height: 1.22;
     color: #545454;
