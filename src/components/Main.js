@@ -11,7 +11,6 @@ function Main(props) {
     React.useEffect(() => {
         apiMe.getData()
             .then(data => {
-                console.log(data);
                 setUserAvatar(data.avatar);
                 setUserName(data.name);
                 setUserDescription(data.about);
@@ -24,7 +23,6 @@ function Main(props) {
     React.useEffect(() => {
         apiCards.getData()
             .then(data => {
-                console.log(data);
                 setCards(data);
 
 
@@ -52,8 +50,8 @@ function Main(props) {
 
             <section className="elements">
                 {/* <img src="./images/image-load.gif" alt="Загрузка" className="elements__image-load" /> */}
-                {cards.map((card) => (
-                    <Card link={card.link} name={card.name} likes={card.likes.length} />
+                {cards.map((card, i) => (
+                    <Card link={card.link} name={card.name} likes={card.likes.length} onCardClick={props.onCardClick} key={i} />
                     ))}
             </section>
 

@@ -1,10 +1,15 @@
 import React from 'react';
 
 function Card(props) {
+
+    function handleClick() {
+        props.onCardClick(props);
+    }
+
     return (
         <div className="element">
             <button className="element__trash" type="button"></button>
-            <img src={`${props.link}`} alt="#" className="element__image" />
+            <img src={`${props.link}`} alt="#" className="element__image" onClick={handleClick} />
             <div className="element__title">
                 <h2 className="element__paragraph">{props.name}</h2>
                 <div className="like">
