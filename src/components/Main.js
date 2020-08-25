@@ -8,35 +8,18 @@ function Main(props) {
     const currentUser = React.useContext(CurrentUserContext);
     const cards = React.useContext(CardsContext);
 
-    function handleCardLike(card) { 
+    function handleCardLike(card) {
         // Снова проверяем, есть ли уже лайк на этой карточке
         const isLiked = card.likes.some(i => i._id === currentUser._id);
-        if (isLiked) {
-            apiCards.deleteLike(card._id)
-                    .then(data => { console.log(data);
-                        card = data;
-                    })
-                    .catch((err) => {
-                        console.log(err);
-                    });
-        } else {
-            apiCards.putLike(card._id)
-                    .then(data => { console.log(data);
-                        card = data;
-                        
-                    })
-                    .catch((err) => {
-                        console.log(err);
-                    });
-        }
-        // Отправляем запрос в API и получаем обновлённые данные карточки
-        // apiCards.changeLikeCardStatus(card._id, !isLiked).then((newCard) => {
-        //     // Формируем новый массив на основе имеющегося, подставляя в него новую карточку
-        //   const newCards = cards.map((c) => c._id === card._id ? newCard : c);
-        //   // Обновляем стейт
-        //   setCards(newCards);
-        
-   }
+        (isLiked ? apiCards.deleteLike(card._id) : apiCards.putLike(card._id))
+            .then(newCard => {
+                const newCards = cards.map((c) => c._id === card._id ? newCard : c);
+                props.setCards(newCards);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    }
 
     return (
         <main className="content">
