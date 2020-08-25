@@ -7,15 +7,21 @@ function Card(props) {
     const isLiked = props.card.likes.some(i => i._id === currentUser._id);
 
     function handleClick() {
-        props.onCardClick(props);
+        props.onCardClick(props.card);
     }
     function handleLikeClick() {
-        props.onCardLike(props.card); 
+        props.onCardLike(props.card);
     }
-    //console.log(props.card.likes);
+    function handleDeleteClick() {
+        props.onCardDelete(props.card);
+    }
     return (
         <div className="element">
-            <button className={`element__trash ${isOwn ? 'element__trash_active' : ''}`} type="button"></button>
+            <button
+                className={`element__trash ${isOwn ? 'element__trash_active' : ''}`}
+                type="button"
+                onClick={handleDeleteClick}>
+            </button>
             <img src={`${props.card.link}`} alt="#" className="element__image" onClick={handleClick} />
             <div className="element__title">
                 <h2 className="element__paragraph">{props.card.name}</h2>
