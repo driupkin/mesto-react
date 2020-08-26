@@ -12,20 +12,24 @@ function EditProfilePopup(props) {
         setDescription(currentUser.about);
     }, [currentUser]);
 
-    function handleChange(el) {
+    function handleChangeName(el) {
         setName(el.target.value);
+    }
+
+    function handleChangeDescription(el) {
         setDescription(el.target.value);
     }
+
     function handleSubmit(e) {
         // Запрещаем браузеру переходить по адресу формы
         e.preventDefault();
-      
+
         // Передаём значения управляемых компонентов во внешний обработчик
         props.onUpdateUser({
-          name,
-          about: description,
+            name,
+            about: description,
         });
-      }
+    }
     return (
         <PopupWithForm
             onSubmit={handleSubmit}
@@ -39,7 +43,7 @@ function EditProfilePopup(props) {
                     <input
                         value={name}
                         name="name"
-                        onChange={handleChange}
+                        onChange={handleChangeName}
                         placeholder="Имя профиля"
                         className="form__input form__input_name"
                         type="text"
@@ -50,7 +54,7 @@ function EditProfilePopup(props) {
                     <input
                         value={description}
                         name="description"
-                        onChange={handleChange}
+                        onChange={handleChangeDescription}
                         placeholder="Описание"
                         className="form__input form__input_description"
                         id="description-input"

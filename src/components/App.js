@@ -3,13 +3,13 @@ import '../blocks/root/root.css';
 import Header from './Header';
 import Footer from './Footer';
 import Main from './Main';
-import PopupWithForm from './PopupWithForm';
 import ImagePopup from './ImagePopup';
 import { apiMe, apiCards } from '../utils/Api';
 import { CurrentUserContext } from '../context/CurrentUserContext';
 import { CardsContext } from '../context/CardsContext';
 import EditProfilePopup from './EditProfilePopup';
 import EditAvatarPopup from './EditAvatarPopup';
+import AddPlacePopup from './AddPlacePopup';
 
 function App() {
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = React.useState();
@@ -43,6 +43,16 @@ function App() {
       });
   }, []);
 
+  React.useEffect(() => {
+    function closeAllPopupsByOverlayOrEsc(e) {
+     if ((e.target.classList.contains('popup_opened')) || (e.key === 'Escape')) 
+        closeAllPopups();
+      
+    }
+    document.addEventListener('keydown', closeAllPopupsByOverlayOrEsc);
+    document.addEventListener('click', closeAllPopupsByOverlayOrEsc);
+  }, []);
+
   function handleEditAvatarClick() {
     setIsEditAvatarPopupOpen(true);
   }
@@ -55,12 +65,7 @@ function App() {
     setIsAddPlacePopupOpen(true);
   }
 
-  function closeAllPopups(e) {
-    // if (e.target) {
-    //   setIsEditAvatarPopupOpen(false);
-    //   setIsEditProfilePopupOpen(false);
-    //   setIsAddPlacePopupOpen(false);
-    // }
+  function closeAllPopups() {
     setIsEditAvatarPopupOpen(false);
     setIsEditProfilePopupOpen(false);
     setIsAddPlacePopupOpen(false);
@@ -73,7 +78,7 @@ function App() {
 
   function handleUpdateUser(values) {
     apiMe.editProfile(values)
-      .then(data => {        
+      .then(data => {
         setCurrentUser(data);
       })
       .catch((err) => {
@@ -84,12 +89,41 @@ function App() {
   function handleUpdateAvatar(url) {
     apiMe.changeAvatar(url.avatar)
       .then(data => {
-        console.log(data);
         setCurrentUser(data);
       })
       .catch((err) => {
         console.log(err);
       });
+  }
+
+  function handleAddPlaceSubmit(values) {
+    apiCards.addCard(values)
+      .then(newCard => setCards([...cards, newCard]))
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  function handleCardLike(card) {
+    // Снова проверяем, есть ли уже лайк на этой карточке
+    const isLiked = card.likes.some(i => i._id === currentUser._id);
+    (isLiked ? apiCards.deleteLike(card._id) : apiCards.putLike(card._id))
+      .then(newCard => {
+        const newCards = cards.map((c) => c._id === card._id ? newCard : c);
+        setCards(newCards);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  function handleCardDelete(card) {
+    apiCards.deleteCard(card._id)
+      .then(() => {
+        const newCards = cards.filter(item => item._id === card._id ? '' : item);
+        setCards(newCards);
+      }
+      );
   }
   return (
     <CurrentUserContext.Provider value={currentUser}>
@@ -98,6 +132,8 @@ function App() {
           <div className="page">
             <Header />
             <Main
+              onCardLike={handleCardLike}
+              onCardDelete={handleCardDelete}
               onCardClick={handleCardClick}
               onEditAvatar={handleEditAvatarClick}
               onEditProfile={handleEditProfileClick}
@@ -111,21 +147,10 @@ function App() {
             onClose={closeAllPopups}
             onUpdateUser={handleUpdateUser}
           />
-          <PopupWithForm
+          <AddPlacePopup
             isOpen={isAddPlacePopupOpen}
             onClose={closeAllPopups}
-            title="Новое место"
-            name="add-cards"
-            buttonName="Создать"
-            children={
-              <fieldset className=" form__field">
-                <input name="name" placeholder="Название" className="form__input form__input_place" type="text"
-                  id="place-input" required minLength="1" maxLength="30" />
-                <span className='form__input-error' id='place-input-error'></span>
-                <input name="link" placeholder="Ссылка на картинку" className="form__input form__input_url" type="url"
-                  id="url-input" required />
-                <span className='form__input-error' id='url-input-error'></span>
-              </fieldset>}
+            onAddPlace={handleAddPlaceSubmit}
           />
           <EditAvatarPopup
             isOpen={isEditAvatarPopupOpen}
