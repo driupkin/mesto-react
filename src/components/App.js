@@ -8,6 +8,7 @@ import ImagePopup from './ImagePopup';
 import { apiMe, apiCards } from '../utils/Api';
 import { CurrentUserContext } from '../context/CurrentUserContext';
 import { CardsContext } from '../context/CardsContext';
+import EditProfilePopup from './EditProfilePopup';
 
 function App() {
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = React.useState();
@@ -40,7 +41,7 @@ function App() {
         console.log(err);
       });
   }, []);
-  
+
   function handleEditAvatarClick() {
     setIsEditAvatarPopupOpen(true);
   }
@@ -68,6 +69,17 @@ function App() {
   function handleCardClick(card) {
     setSelectedCard(card);
   }
+
+  function handleUpdateUser(values) { console.log(values);
+     apiMe.editProfile(values)
+    .then(data => {
+      console.log(data);
+      setCurrentUser(data);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+   }
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <CardsContext.Provider value={cards}>
@@ -83,7 +95,12 @@ function App() {
             />
             <Footer />
           </div>
-          <PopupWithForm
+          <EditProfilePopup
+            isOpen={isEditProfilePopupOpen}
+            onClose={closeAllPopups}
+            onUpdateUser={handleUpdateUser}
+          />
+          {/* <PopupWithForm
             isOpen={isEditProfilePopupOpen}
             onClose={closeAllPopups}
             title="Редактировать профиль"
@@ -99,7 +116,7 @@ function App() {
                 <span className='form__input-error' id='description-input-error'></span>
               </fieldset>
             }
-          />
+          /> */}
           <PopupWithForm
             isOpen={isAddPlacePopupOpen}
             onClose={closeAllPopups}

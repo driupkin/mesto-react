@@ -27,7 +27,7 @@
             headers: this.headers,
             body: JSON.stringify({
                 name: values.name,
-                about: values.description
+                about: values.about
             })
         })
             .then(this._handleResponse)
