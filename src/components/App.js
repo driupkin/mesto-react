@@ -9,6 +9,7 @@ import { apiMe, apiCards } from '../utils/Api';
 import { CurrentUserContext } from '../context/CurrentUserContext';
 import { CardsContext } from '../context/CardsContext';
 import EditProfilePopup from './EditProfilePopup';
+import EditAvatarPopup from './EditAvatarPopup';
 
 function App() {
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = React.useState();
@@ -70,16 +71,26 @@ function App() {
     setSelectedCard(card);
   }
 
-  function handleUpdateUser(values) { console.log(values);
-     apiMe.editProfile(values)
-    .then(data => {
-      console.log(data);
-      setCurrentUser(data);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-   }
+  function handleUpdateUser(values) {
+    apiMe.editProfile(values)
+      .then(data => {        
+        setCurrentUser(data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  function handleUpdateAvatar(url) {
+    apiMe.changeAvatar(url.avatar)
+      .then(data => {
+        console.log(data);
+        setCurrentUser(data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <CardsContext.Provider value={cards}>
@@ -100,23 +111,6 @@ function App() {
             onClose={closeAllPopups}
             onUpdateUser={handleUpdateUser}
           />
-          {/* <PopupWithForm
-            isOpen={isEditProfilePopupOpen}
-            onClose={closeAllPopups}
-            title="Редактировать профиль"
-            name="edit-profile"
-            buttonName="Сохранить"
-            children={
-              <fieldset className="form__field">
-                <input name="name" placeholder="Имя профиля" className="form__input form__input_name" type="text"
-                  id="name-input" required minLength="2" maxLength="40" />
-                <span className='form__input-error' id='name-input-error'></span>
-                <input name="description" placeholder="Описание" className="form__input form__input_description"
-                  id="description-input" type="text" required minLength="2" maxLength="200" />
-                <span className='form__input-error' id='description-input-error'></span>
-              </fieldset>
-            }
-          /> */}
           <PopupWithForm
             isOpen={isAddPlacePopupOpen}
             onClose={closeAllPopups}
@@ -133,19 +127,10 @@ function App() {
                 <span className='form__input-error' id='url-input-error'></span>
               </fieldset>}
           />
-          <PopupWithForm
+          <EditAvatarPopup
             isOpen={isEditAvatarPopupOpen}
             onClose={closeAllPopups}
-            title="Обновить аватар"
-            name="change-avatar"
-            buttonName="Сохранить"
-            children={
-              <fieldset className="form__field">
-                <input name="avatar" placeholder="Ссылка на аватар" className="form__input form__input_url" type="url"
-                  id="url-input" required />
-                <span className='form__input-error' id='url-input-error'></span>
-              </fieldset>
-            }
+            onUpdateAvatar={handleUpdateAvatar}
           />
           {/* <PopupWithForm title="Вы уверены?" name="delete-cards" buttonName="Да" /> */}
           <ImagePopup
