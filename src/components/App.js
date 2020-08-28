@@ -57,7 +57,7 @@ function App() {
     document.addEventListener('keydown', closeAllPopupsByEsc);
 
     return () => {
-      document.addEventListener('mousedown', closeAllPopupsByOverlay);
+      document.removeEventListener('mousedown', closeAllPopupsByOverlay);
       document.removeEventListener('keydown', closeAllPopupsByEsc);
     }
   });
