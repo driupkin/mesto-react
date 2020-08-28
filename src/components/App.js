@@ -44,14 +44,23 @@ function App() {
   }, []);
 
   React.useEffect(() => {
-    function closeAllPopupsByOverlayOrEsc(e) {
-     if ((e.target.classList.contains('popup_opened')) || (e.key === 'Escape')) 
+    function closeAllPopupsByOverlay(e) {
+      if (e.target.classList.contains('popup_opened'))
         closeAllPopups();
-      
     }
-    document.addEventListener('keydown', closeAllPopupsByOverlayOrEsc);
-    document.addEventListener('click', closeAllPopupsByOverlayOrEsc);
-  }, []);
+    document.addEventListener('mousedown', closeAllPopupsByOverlay);
+
+    function closeAllPopupsByEsc(e) {
+      if (e.key === 'Escape')
+        closeAllPopups();
+    }
+    document.addEventListener('keydown', closeAllPopupsByEsc);
+
+    return () => {
+      document.addEventListener('mousedown', closeAllPopupsByOverlay);
+      document.removeEventListener('keydown', closeAllPopupsByEsc);
+    }
+  });
 
   function handleEditAvatarClick() {
     setIsEditAvatarPopupOpen(true);
@@ -132,6 +141,7 @@ function App() {
           <div className="page">
             <Header />
             <Main
+              cards={cards}
               onCardLike={handleCardLike}
               onCardDelete={handleCardDelete}
               onCardClick={handleCardClick}
