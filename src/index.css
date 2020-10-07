@@ -15,3 +15,7 @@
 @import url('./blocks/form/__input/_type/form__input_type_error.css');
 @import url('./blocks/like/like.css');
 @import url('./blocks/form/_delete-cards/form_delete-cards.css');
+@import url('./blocks/form/__title/_register/form__title_register.css');
+@import url('./blocks/popup/_register/popup_register.css');
+@import url('./blocks/sign/sign.css');
+@import url('./blocks/sign-form/sign-form.css');

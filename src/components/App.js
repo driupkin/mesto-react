@@ -1,4 +1,5 @@
 import React from 'react';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import '../blocks/root/root.css';
 import Header from './Header';
 import Footer from './Footer';
@@ -10,6 +11,7 @@ import { CardsContext } from '../context/CardsContext';
 import EditProfilePopup from './EditProfilePopup';
 import EditAvatarPopup from './EditAvatarPopup';
 import AddPlacePopup from './AddPlacePopup';
+import Register from './Register';
 
 function App() {
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = React.useState();
@@ -140,17 +142,29 @@ function App() {
         <div className="root">
           <div className="page">
             <Header />
-            <Main
-              cards={cards}
-              onCardLike={handleCardLike}
-              onCardDelete={handleCardDelete}
-              onCardClick={handleCardClick}
-              onEditAvatar={handleEditAvatarClick}
-              onEditProfile={handleEditProfileClick}
-              onAddPlace={handleAddPlaceClick}
-              setCards={setCards}
-            />
-            <Footer />
+            <BrowserRouter>
+              <Switch>
+
+                <Route exact path="/">
+                  <Main
+                    cards={cards}
+                    onCardLike={handleCardLike}
+                    onCardDelete={handleCardDelete}
+                    onCardClick={handleCardClick}
+                    onEditAvatar={handleEditAvatarClick}
+                    onEditProfile={handleEditProfileClick}
+                    onAddPlace={handleAddPlaceClick}
+                    setCards={setCards}
+                  />
+                  <Footer />
+                </Route>
+
+                <Route path="/signup">
+                  <Register />
+                </Route>
+
+              </Switch>
+            </BrowserRouter>
           </div>
           <EditProfilePopup
             isOpen={isEditProfilePopupOpen}

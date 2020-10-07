@@ -1,0 +1,7 @@
+@import url('./__container/sign__container.css');
+@import url('./__title/sign__title.css');
+@import url('./__subtitle/sign__subtitle.css');
+.sign {
+    display: flex;
+    justify-content: center;    
+}
