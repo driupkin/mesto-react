@@ -5,10 +5,11 @@ function SignForm(props) {
         <section className="sign">
             <div className="sign__container">
                 <h2 className="sign__title">{props.title}</h2>
-                <form className="sign-form">
+                <form className="sign-form" onSubmit={props.onSubmit}>
                     <fieldset className="sign-form__field">
                         <input
                             // ref={}
+                            onChange={props.onEmailChange}
                             name="email"
                             placeholder="Email"
                             className="sign-form__input"
@@ -20,10 +21,11 @@ function SignForm(props) {
                         />
                         <input
                             // ref={}
+                            onChange={props.onPassChange}
                             name="password"
                             placeholder="Пароль"
                             className="sign-form__input"
-                            type="text"
+                            type="password"
                             id="place-input"
                             required
                             minLength="8"
@@ -38,7 +40,7 @@ function SignForm(props) {
                     </button>
                 </form>
                 <h3 className="sign__subtitle">{props.subtitle}
-                    <a href="#">{props.subtitleUrl}</a>
+                    <a className="sign__link" href="#">{props.subtitleUrl}</a>
                 </h3>
             </div>
         </section>

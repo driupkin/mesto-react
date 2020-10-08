@@ -12,6 +12,8 @@ import EditProfilePopup from './EditProfilePopup';
 import EditAvatarPopup from './EditAvatarPopup';
 import AddPlacePopup from './AddPlacePopup';
 import Register from './Register';
+import Login from './Login';
+import ProtectedRoute from './ProtectedRoute';
 
 function App() {
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = React.useState();
@@ -24,6 +26,7 @@ function App() {
     avatar: ''
   });
   const [cards, setCards] = React.useState([]);
+  const [loggedIn, setLoggedIn] = React.useState(false)
 
   React.useEffect(() => {
     apiMe.getData()
@@ -145,22 +148,26 @@ function App() {
             <BrowserRouter>
               <Switch>
 
-                <Route exact path="/">
-                  <Main
-                    cards={cards}
-                    onCardLike={handleCardLike}
-                    onCardDelete={handleCardDelete}
-                    onCardClick={handleCardClick}
-                    onEditAvatar={handleEditAvatarClick}
-                    onEditProfile={handleEditProfileClick}
-                    onAddPlace={handleAddPlaceClick}
-                    setCards={setCards}
-                  />
-                  <Footer />
-                </Route>
+                <ProtectedRoute exact path="/"
+                  component={Main}
+                  loggedIn={loggedIn}
+                  cards={cards}
+                  onCardLike={handleCardLike}
+                  onCardDelete={handleCardDelete}
+                  onCardClick={handleCardClick}
+                  onEditAvatar={handleEditAvatarClick}
+                  onEditProfile={handleEditProfileClick}
+                  onAddPlace={handleAddPlaceClick}
+                  setCards={setCards}
+                ><Footer />
+                </ProtectedRoute>
 
                 <Route path="/signup">
                   <Register />
+                </Route>
+
+                <Route path="/signin">
+                  <Login />
                 </Route>
 
               </Switch>
@@ -190,7 +197,7 @@ function App() {
           />
         </div>
       </CardsContext.Provider>
-    </CurrentUserContext.Provider>
+    </CurrentUserContext.Provider >
   );
 }
 
