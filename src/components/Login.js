@@ -11,6 +11,7 @@ function Login(props) {
 
     function handleSubmit(e) {
         e.preventDefault();
+        props.tokenCheck();
         auth.authorize(email, password)
             .then(data => {
                 if (data.token) {
@@ -18,7 +19,7 @@ function Login(props) {
                 }
             })
             .catch((err) => console.log(err));
-        props.tokenCheck();
+        
         return;
     }
 

@@ -13,6 +13,7 @@ import EditAvatarPopup from './EditAvatarPopup';
 import AddPlacePopup from './AddPlacePopup';
 import Register from './Register';
 import Login from './Login';
+import InfoTooltip from './InfoTooltip';
 import ProtectedRoute from './ProtectedRoute';
 import * as auth from '../auth.js';
 
@@ -28,6 +29,8 @@ function App() {
   });
   const [cards, setCards] = React.useState([]);
   const [loggedIn, setLoggedIn] = React.useState(false);
+
+  React.useEffect(() => tokenCheck(), []);
 
   React.useEffect(() => {
     apiMe.getData()
@@ -154,8 +157,6 @@ function App() {
     }
   }
 
-  React.useEffect(() => {tokenCheck(); console.log(loggedIn);}, []);
-
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <CardsContext.Provider value={cards}>
@@ -212,6 +213,7 @@ function App() {
             name={selectedCard.name}
             onClose={closeAllPopups}
           />
+          <InfoTooltip />
         </div>
       </CardsContext.Provider>
     </CurrentUserContext.Provider >
