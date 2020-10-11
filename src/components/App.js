@@ -14,6 +14,7 @@ import AddPlacePopup from './AddPlacePopup';
 import Register from './Register';
 import Login from './Login';
 import ProtectedRoute from './ProtectedRoute';
+import * as auth from '../auth.js';
 
 function App() {
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = React.useState();
@@ -26,7 +27,7 @@ function App() {
     avatar: ''
   });
   const [cards, setCards] = React.useState([]);
-  const [loggedIn, setLoggedIn] = React.useState(false)
+  const [loggedIn, setLoggedIn] = React.useState(false);
 
   React.useEffect(() => {
     apiMe.getData()
@@ -139,6 +140,22 @@ function App() {
       }
       );
   }
+
+  function tokenCheck() {
+    const jwt = localStorage.getItem('jwt');
+    if (jwt) {
+      auth.getContent(jwt)
+        .then((res) => {
+          if (res) {
+            setLoggedIn(true);
+          }
+        })
+        .catch((err) => console.log(err));
+    }
+  }
+
+  React.useEffect(() => {tokenCheck(); console.log(loggedIn);}, []);
+
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <CardsContext.Provider value={cards}>
@@ -167,7 +184,7 @@ function App() {
                 </Route>
 
                 <Route path="/signin">
-                  <Login />
+                  <Login tokenCheck={tokenCheck} />
                 </Route>
 
               </Switch>

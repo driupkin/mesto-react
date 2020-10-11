@@ -8,7 +8,6 @@ function SignForm(props) {
                 <form className="sign-form" onSubmit={props.onSubmit}>
                     <fieldset className="sign-form__field">
                         <input
-                            // ref={}
                             onChange={props.onEmailChange}
                             name="email"
                             placeholder="Email"
@@ -20,7 +19,6 @@ function SignForm(props) {
                             maxLength="30"
                         />
                         <input
-                            // ref={}
                             onChange={props.onPassChange}
                             name="password"
                             placeholder="Пароль"
@@ -35,12 +33,12 @@ function SignForm(props) {
                     <button
                         type="submit"
                         className="sign-form__button"
-                        onClick={props.onClose}>
+                        onClick={props.onClick}>
                         {props.buttonName}
                     </button>
                 </form>
                 <h3 className="sign__subtitle">{props.subtitle}
-                    <a className="sign__link" href="#">{props.subtitleUrl}</a>
+                    <a className="sign__link" href={`/${props.link}`}>{props.subtitleUrl}</a>
                 </h3>
             </div>
         </section>
