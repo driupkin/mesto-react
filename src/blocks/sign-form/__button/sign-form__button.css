@@ -3,8 +3,14 @@
     height: 50px;
     left: 461px;
     top: 558px;
-    background: #FFFFFF;
+    background-color: #FFFFFF;
     border-radius: 2px;
     outline: none;
     border: 0;
+    cursor: pointer;
+    transition: background-color 1s ease;
+}
+
+.sign-form__button:hover {
+    background-color: rgba(100, 100, 100, 0.85);
 }

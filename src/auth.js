@@ -8,7 +8,6 @@ export const register = (email, password) => {
         },
         body: JSON.stringify({ email, password })
     })
-    .then((response => response.json()))
     .then(data => {return data})
     .catch((err) => console.log(err));
 };
@@ -39,7 +38,7 @@ export const getContent = (token) => {
             "Authorization": `Bearer ${token}`
         }
     })
-        .then((response => response.json()))
+        .then(response => response.json())
         .then(data => {return data})
         .catch((err) => console.log(err));
 };

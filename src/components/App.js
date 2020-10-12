@@ -13,9 +13,9 @@ import EditAvatarPopup from './EditAvatarPopup';
 import AddPlacePopup from './AddPlacePopup';
 import Register from './Register';
 import Login from './Login';
-import InfoTooltip from './InfoTooltip';
 import ProtectedRoute from './ProtectedRoute';
 import * as auth from '../auth.js';
+import InfoTooltip from './InfoTooltip';
 
 function App() {
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = React.useState();
@@ -29,8 +29,10 @@ function App() {
   });
   const [cards, setCards] = React.useState([]);
   const [loggedIn, setLoggedIn] = React.useState(false);
+  const [isInfoTooltip, setIsInfoTooltip] = React.useState();
+  const [isResStatusOk, setIsResStatusOk] = React.useState();
 
-  React.useEffect(() => tokenCheck(), []);
+  
 
   React.useEffect(() => {
     apiMe.getData()
@@ -88,6 +90,7 @@ function App() {
     setIsEditProfilePopupOpen(false);
     setIsAddPlacePopupOpen(false);
     setSelectedCard(false);
+    setIsInfoTooltip(false);
   }
 
   function handleCardClick(card) {
@@ -143,7 +146,8 @@ function App() {
       }
       );
   }
-
+  React.useEffect(() => { tokenCheck(); console.log(loggedIn) });
+ 
   function tokenCheck() {
     const jwt = localStorage.getItem('jwt');
     if (jwt) {
@@ -155,6 +159,10 @@ function App() {
         })
         .catch((err) => console.log(err));
     }
+  }
+
+  function handleSubmitRegister(value) {
+    setIsInfoTooltip(value);
   }
 
   return (
@@ -177,11 +185,14 @@ function App() {
                   onEditProfile={handleEditProfileClick}
                   onAddPlace={handleAddPlaceClick}
                   setCards={setCards}
-                ><Footer />
+                >
                 </ProtectedRoute>
 
                 <Route path="/signup">
-                  <Register />
+                  <Register
+                    submitRegister={handleSubmitRegister}
+                    setStatus={(value => setIsResStatusOk(value))}
+                  />
                 </Route>
 
                 <Route path="/signin">
@@ -190,6 +201,7 @@ function App() {
 
               </Switch>
             </BrowserRouter>
+            <Footer />
           </div>
           <EditProfilePopup
             isOpen={isEditProfilePopupOpen}
@@ -213,7 +225,12 @@ function App() {
             name={selectedCard.name}
             onClose={closeAllPopups}
           />
-          <InfoTooltip />
+          <InfoTooltip
+            isOpen={isInfoTooltip}
+            onClose={closeAllPopups}
+            isStatusTitleOk={isResStatusOk}
+            isStatusIconOk={isResStatusOk}
+          />
         </div>
       </CardsContext.Provider>
     </CurrentUserContext.Provider >

@@ -15,6 +15,7 @@ function PopupWithForm(props) {
                         type="button"
                         className={`popup__close popup__close_${props.name}`}>
                     </button>
+                    {props.image}                    
                     <h2 className={`form__title form__title_${props.name}`}>{props.title}</h2>
                     {props.children}
                     <button
