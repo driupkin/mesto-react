@@ -8,29 +8,36 @@ function Register(props) {
     const [password, setPassword] = React.useState('');
     const history = useHistory();
 
+    React.useEffect(() => {
+        props.setTitle({
+            name: "Войти",
+            link: "signin"
+        });
+    },[]);
+
     function handleSubmit(e) {
-        e.preventDefault();
-        auth.register(email, password)
-            .then(res => res.json())
-            .then(data => {
-                if (data.data) {
-                    auth.authorize(email, password)
-                        .then(data => {
-                            if (data.token) {
-                                history.push('/');
-                            }
-                        })
-                        .catch((err) => console.log(err));
-                    console.log(data.data);
-                    props.setStatus(true);
-                } else {
-                    console.log(data);
-                    props.setStatus(false);
-                }
-                props.submitRegister(true);
-            })
-            .catch((err) => console.log(err));
-    }
+            e.preventDefault();
+            auth.register(email, password)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.data) {
+                        console.log(data.data);
+                        props.loggedIn(true);
+                        props.setStatus(true);
+                        props.setTitle({
+                            name: "Выйти",
+                            link: "signin",
+                            email: email
+                        });
+                        history.push('/');
+                    } else {
+                        console.log(data);
+                        props.setStatus(false);
+                    }
+                    props.submitRegister(true);
+                })
+                .catch((err) => console.log(err));
+        }
 
     return (
         <SignForm

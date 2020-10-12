@@ -1,6 +1,5 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
-
 import SignForm from './SignForm';
 import * as auth from '../auth.js';
 
@@ -9,17 +8,30 @@ function Login(props) {
     const [password, setPassword] = React.useState('');
     const history = useHistory();
 
+    React.useEffect(() => {
+        props.setTitle({
+            name: "Регистрация",
+            link: "signup"
+        });
+    }, []);
+
     function handleSubmit(e) {
         e.preventDefault();
-        props.tokenCheck();
+        // props.tokenCheck();
         auth.authorize(email, password)
             .then(data => {
                 if (data.token) {
+                    props.setTitle({
+                        name: "Выйти",
+                        link: "signin",
+                        email: email
+                    });
+                    props.loggedIn(true)
                     history.push('/');
                 }
             })
             .catch((err) => console.log(err));
-        
+
         return;
     }
 

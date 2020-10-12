@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { Route, Switch, useHistory } from 'react-router-dom';
 import '../blocks/root/root.css';
 import Header from './Header';
 import Footer from './Footer';
@@ -31,8 +31,11 @@ function App() {
   const [loggedIn, setLoggedIn] = React.useState(false);
   const [isInfoTooltip, setIsInfoTooltip] = React.useState();
   const [isResStatusOk, setIsResStatusOk] = React.useState();
+  const [headerTitle, setHeaderTitle] = React.useState({}); console.log(headerTitle);
 
-  
+  const history = useHistory();
+
+  React.useEffect(() => tokenCheck(), []);
 
   React.useEffect(() => {
     apiMe.getData()
@@ -146,15 +149,17 @@ function App() {
       }
       );
   }
-  React.useEffect(() => { tokenCheck(); console.log(loggedIn) });
- 
+
+
   function tokenCheck() {
+    console.log(loggedIn);
     const jwt = localStorage.getItem('jwt');
     if (jwt) {
       auth.getContent(jwt)
         .then((res) => {
           if (res) {
             setLoggedIn(true);
+            history.push('/');
           }
         })
         .catch((err) => console.log(err));
@@ -170,37 +175,41 @@ function App() {
       <CardsContext.Provider value={cards}>
         <div className="root">
           <div className="page">
-            <Header />
-            <BrowserRouter>
-              <Switch>
+            <Header title={headerTitle} />
+            <Switch>
 
-                <ProtectedRoute exact path="/"
-                  component={Main}
-                  loggedIn={loggedIn}
-                  cards={cards}
-                  onCardLike={handleCardLike}
-                  onCardDelete={handleCardDelete}
-                  onCardClick={handleCardClick}
-                  onEditAvatar={handleEditAvatarClick}
-                  onEditProfile={handleEditProfileClick}
-                  onAddPlace={handleAddPlaceClick}
-                  setCards={setCards}
-                >
-                </ProtectedRoute>
+              <ProtectedRoute exact path="/"
+                component={Main}
+                loggedIn={loggedIn}
+                cards={cards}
+                onCardLike={handleCardLike}
+                onCardDelete={handleCardDelete}
+                onCardClick={handleCardClick}
+                onEditAvatar={handleEditAvatarClick}
+                onEditProfile={handleEditProfileClick}
+                onAddPlace={handleAddPlaceClick}
+                setCards={setCards}
+              >
+              </ProtectedRoute>
 
-                <Route path="/signup">
-                  <Register
-                    submitRegister={handleSubmitRegister}
-                    setStatus={(value => setIsResStatusOk(value))}
-                  />
-                </Route>
+              <Route path="/signup">
+                <Register
+                  submitRegister={handleSubmitRegister}
+                  setStatus={(value => setIsResStatusOk(value))}
+                  loggedIn={value => setLoggedIn(value)}
+                  setTitle={value => setHeaderTitle(value)}
+                />
+              </Route>
 
-                <Route path="/signin">
-                  <Login tokenCheck={tokenCheck} />
-                </Route>
+              <Route path="/signin">
+                <Login
+                  setTitle={value => setHeaderTitle(value)}
+                  loggedIn={value => setLoggedIn(value)}
+                  // tokenCheck={tokenCheck}
+                />
+              </Route>
 
-              </Switch>
-            </BrowserRouter>
+            </Switch>
             <Footer />
           </div>
           <EditProfilePopup
