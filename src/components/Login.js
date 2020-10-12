@@ -11,7 +11,7 @@ function Login(props) {
     React.useEffect(() => {
         props.setTitle({
             name: "Регистрация",
-            link: "signup"
+            link: "signup",
         });
     }, []);
 
@@ -21,12 +21,13 @@ function Login(props) {
         auth.authorize(email, password)
             .then(data => {
                 if (data.token) {
-                    props.setTitle({
-                        name: "Выйти",
-                        link: "signin",
-                        email: email
-                    });
-                    props.loggedIn(true)
+                    props.tokenCheck();
+                    // props.setTitle({
+                    //     name: "Выйти",
+                    //     link: "signin",
+                    //     email: email
+                    // });
+                   // props.loggedIn(true)
                     history.push('/');
                 }
             })

@@ -16,11 +16,13 @@ import Login from './Login';
 import ProtectedRoute from './ProtectedRoute';
 import * as auth from '../auth.js';
 import InfoTooltip from './InfoTooltip';
+import PopupDeleteCard from './PopupDeleteCard';
 
 function App() {
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = React.useState();
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = React.useState();
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = React.useState();
+  const [isDelCardPopupOpen, setIsDelCardPopupOpen] = React.useState();
   const [selectedCard, setSelectedCard] = React.useState(false);
   const [currentUser, setCurrentUser] = React.useState({
     name: '',
@@ -31,11 +33,15 @@ function App() {
   const [loggedIn, setLoggedIn] = React.useState(false);
   const [isInfoTooltip, setIsInfoTooltip] = React.useState();
   const [isResStatusOk, setIsResStatusOk] = React.useState();
-  const [headerTitle, setHeaderTitle] = React.useState({}); console.log(headerTitle);
+  const [headerTitle, setHeaderTitle] = React.useState({
+    name: '',
+    link: '',
+    email: ''
+  }); console.log(headerTitle);
 
   const history = useHistory();
 
-  React.useEffect(() => tokenCheck(), []);
+  React.useEffect(() => tokenCheck(), [loggedIn]);
 
   React.useEffect(() => {
     apiMe.getData()
@@ -158,6 +164,12 @@ function App() {
       auth.getContent(jwt)
         .then((res) => {
           if (res) {
+            console.log(res.data);
+            setHeaderTitle({
+              name: "Выйти",
+              link: "signin",
+              email: res.data.email
+            })
             setLoggedIn(true);
             history.push('/');
           }
@@ -205,7 +217,7 @@ function App() {
                 <Login
                   setTitle={value => setHeaderTitle(value)}
                   loggedIn={value => setLoggedIn(value)}
-                  // tokenCheck={tokenCheck}
+                  tokenCheck={tokenCheck}
                 />
               </Route>
 
@@ -227,7 +239,9 @@ function App() {
             onClose={closeAllPopups}
             onUpdateAvatar={handleUpdateAvatar}
           />
-          {/* <PopupWithForm title="Вы уверены?" name="delete-cards" buttonName="Да" /> */}
+          <PopupDeleteCard
+            isOpen={isDelCardPopupOpen}
+          />
           <ImagePopup
             card={selectedCard}
             link={selectedCard.link}
