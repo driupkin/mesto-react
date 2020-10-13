@@ -23,6 +23,7 @@ function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = React.useState();
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = React.useState();
   const [isDelCardPopupOpen, setIsDelCardPopupOpen] = React.useState();
+  const [isRealyDelCard, setIsRealyDelCard] = React.useState(false);
   const [selectedCard, setSelectedCard] = React.useState(false);
   const [currentUser, setCurrentUser] = React.useState({
     name: '',
@@ -100,6 +101,7 @@ function App() {
     setIsAddPlacePopupOpen(false);
     setSelectedCard(false);
     setIsInfoTooltip(false);
+    setIsDelCardPopupOpen(false);
   }
 
   function handleCardClick(card) {
@@ -148,12 +150,15 @@ function App() {
   }
 
   function handleCardDelete(card) {
-    apiCards.deleteCard(card._id)
-      .then(() => {
-        const newCards = cards.filter(item => item._id === card._id ? '' : item);
-        setCards(newCards);
-      }
-      );
+    setIsDelCardPopupOpen(true);
+    if (isRealyDelCard) {
+      apiCards.deleteCard(card._id)
+        .then(() => {
+          const newCards = cards.filter(item => item._id === card._id ? '' : item);
+          setCards(newCards);
+        }
+        );
+    }
   }
 
 
@@ -241,6 +246,8 @@ function App() {
           />
           <PopupDeleteCard
             isOpen={isDelCardPopupOpen}
+            onClose={closeAllPopups}
+            onSubmit={(e)=> {e.preventDefault();setIsRealyDelCard(true);}}
           />
           <ImagePopup
             card={selectedCard}

@@ -10,6 +10,7 @@ function PopupDeleteCard(props) {
             buttonName="Да"
             isOpen={props.isOpen}
             onClose={props.onClose}
+            onSubmit={props.onSubmit}
         />
     )
 
